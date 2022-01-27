@@ -14,7 +14,7 @@ interface CreateContactProps {
 
 const CreateContact: React.FC<CreateContactProps> = ({open, setOpen, addContact}) => {
   const theme = useTheme();
-  const responsiveFullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const responsiveFullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [contactData, setContact] = useState<ContactType>(init_Contact);
 
   const clearForm = () => {

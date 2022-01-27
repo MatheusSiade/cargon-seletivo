@@ -1,19 +1,23 @@
 import {ContactType} from "./types";
-import {Button, Divider, IconButton, Typography} from "@mui/material";
+import {Button, Divider, IconButton, Typography, useMediaQuery, useTheme} from "@mui/material";
 import React, {useEffect} from "react";
 import ContactForm from "./form";
 import {css} from "@emotion/react";
-import {Delete, Edit} from "@mui/icons-material";
+import {ArrowBack, Delete, Edit, KeyboardArrowLeft} from "@mui/icons-material";
 import axios from "axios";
 
 interface ContactProps {
   contact: ContactType;
   deleteContact: any;
 
-  updateContact(contact: ContactType): void;
+  updateContact(contact: ContactType | undefined): void;
 }
 
 const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}) => {
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down(700));
+
   const [edit, setEdit] = React.useState(true)
   const [editContact, setEditContact] = React.useState<ContactType>(contact);
   useEffect(() => {
@@ -56,14 +60,14 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
   const classes = {
     header: css`display: flex;
       justify-content: space-between;
-      align-items: center;
-      min-width: 500px;`,
+      align-items: center;`,
 
     email: css`display: flex;
       flex-direction: column;
       margin-bottom: 16px`,
 
     optionsDiv: css`display: flex;
+      flex-direction: ${smDown ? "column" : "row"};
       justify-content: space-between`,
 
     gender: css`display: flex;
@@ -73,10 +77,13 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
     status: css`display: flex;
       flex-direction: column;
       margin-bottom: 16px;
-      align-items: end;`
+      align-items: ${smDown ? "start" : "end"};`
   }
-  return <div css={css`margin-top: 12px; padding-right: 8px`}>
+  return <div css={css`margin-top: 12px;
+    padding: ${smDown ? "0 8px" : "0 16px 0 0 "};
+    width: ${smDown ? "100vw" : mdDown ? "400px" : "500px"};`}>
     <div css={classes.header}>
+      {smDown && <IconButton onClick={() => updateContact(undefined)}><ArrowBack/></IconButton>}
       <Typography variant={"h5"}>{contact.name}</Typography>
       <div>
         {!edit && <IconButton onClick={() => setEdit(true)}><Edit/></IconButton>}
@@ -97,7 +104,7 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
       </div>
       <div css={classes.optionsDiv}>
         <div css={classes.gender}>
-          <Typography>{contact.gender === "male"? "Masculino" : "Feminino"}</Typography>
+          <Typography>{contact.gender === "male" ? "Masculino" : "Feminino"}</Typography>
           <Typography variant={"subtitle2"}> Gênero</Typography>
         </div>
         <div css={classes.status}>

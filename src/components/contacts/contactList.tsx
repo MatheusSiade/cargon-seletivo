@@ -3,16 +3,16 @@ import axios from "axios";
 import {ContactType} from "./types";
 import {
   CircularProgress,
-  Fab,
+  Fab, IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography,
+  Typography, useMediaQuery,
   useTheme
 } from "@mui/material";
-import {Add, Person} from "@mui/icons-material";
+import {Add, Close, Person} from "@mui/icons-material";
 import {css} from "@emotion/react";
 import Contact from "./contact";
 
@@ -21,6 +21,7 @@ import useInfiniteScroll from "react-infinite-scroll-hook";
 
 const ContactList: React.FC = () => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [contacts, setContacts] = useState<ContactType[]>([])
   const [loading, setLoading] = useState(false)
@@ -33,7 +34,8 @@ const ContactList: React.FC = () => {
   const classes = {
     mainDiv: css`display: flex;
       width: 100%;
-      max-height: 100%;`,
+      max-height: 100%;;
+      justify-content: center;`,
 
     list: css`height: inherit;
       overflow-y: scroll;
@@ -42,22 +44,30 @@ const ContactList: React.FC = () => {
         display: none;
       }`,
 
+    listDiv: css`height: 100%;
+      padding-right: 8px `,
+
     helperText: css`display: flex;
       justify-content: center;
       align-items: center;
       height: inherit;
       width: 100%`,
+
     fab: css`position: fixed;
       bottom: 32px;
-      right: 56px`,
+      right: ${smDown ? 32 : 56}px`,
+
     circularProgress: css`
       display: flex;
-      margin: 16px auto;
-    `,
+      margin: 16px auto;`,
+
+    closeButtonDiv: css`height: 56px;
+      display: flex;
+      justify-content: flex-end`,
   }
 
   const getContacts = async () => {
-    if(hasNextPage){
+    if (hasNextPage) {
       setLoading(true)
       const response = await axios.get(`https://gorest.co.in/public/v1/users?page=${currentPage}`);
       console.log(response)
@@ -89,12 +99,14 @@ const ContactList: React.FC = () => {
     }
   }
 
-  const updateContact = (contact: ContactType) => {
-    const index = contacts.findIndex(c => c.id === contact.id)
-    if (contacts.length > index && index !== -1) {
-      setContacts([...contacts.slice(0, index), contact, ...contacts.slice(index + 1,)])
-      setSelectedContact(contact)
-    }
+  const updateContact = (contact: ContactType | undefined) => {
+    if (contact !== undefined) {
+      const index = contacts.findIndex(c => c.id === contact.id)
+      if (contacts.length > index && index !== -1) {
+        setContacts([...contacts.slice(0, index), contact, ...contacts.slice(index + 1,)])
+        setSelectedContact(contact)
+      }
+    } else setSelectedContact(undefined)
   }
 
   const [sentryRef] = useInfiniteScroll({
@@ -106,8 +118,7 @@ const ContactList: React.FC = () => {
 
   return <div css={classes.mainDiv}>
     <div css={classes.list}>
-      <List css={css`height: 100%;
-        padding-right: 8px `}>
+      {!(smDown && selectedContact !== undefined) && <List css={classes.listDiv}>
         {contacts.map((contact) => {
           return <ListItem key={contact.id} selected={contact.id === selectedContact?.id} disablePadding>
             <ListItemButton onClick={() => setSelectedContact(contact)}>
@@ -122,17 +133,22 @@ const ContactList: React.FC = () => {
             <CircularProgress size={20} css={classes.circularProgress}/>
           </ListItem>
         )}
-      </List></div>
-    {selectedContact ? <Contact contact={selectedContact}
-                                updateContact={updateContact}
-                                deleteContact={() => selectedContact?.id ? deleteContact(selectedContact?.id) : null}/> :
-      <div css={classes.helperText}>
+      </List>}</div>
+
+    {selectedContact ? <div css={css`display: block`}>
+
+      <Contact contact={selectedContact}
+               updateContact={updateContact}
+               deleteContact={() => selectedContact?.id ? deleteContact(selectedContact?.id) : null}/>
+    </div> : !smDown && <div css={classes.helperText}>
         <Typography>Selecione um contato para ver mais detalhes</Typography>
-      </div>}
+    </div>}
+
     <CreateContact open={open} setOpen={setOpen} addContact={addContact}/>
     <Fab color="primary" css={classes.fab} onClick={() => setOpen(true)}>
       <Add/>
     </Fab>
+
   </div>
 }
 export default ContactList

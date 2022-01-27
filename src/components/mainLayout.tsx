@@ -1,12 +1,14 @@
 import {css} from "@emotion/react";
 import React from "react";
-import {Paper, useTheme} from "@mui/material";
+import {Paper, useMediaQuery, useTheme} from "@mui/material";
 
 const MainLayout: React.FC = (props) => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
   const classes = {
-    main: css`margin-top: 64px;
-      height: calc(100vh - 64px);
+    main: css`margin-top: ${smDown ? "56px" : "64px"};
+      height: calc(100vh - ${smDown ? "56px" : "64px"});
       display: flex;
       align-items: center;
       justify-content: center;
@@ -26,12 +28,15 @@ const MainLayout: React.FC = (props) => {
       transform: rotate(10deg) scale(1.1);
     `,
 
-    paper: css`width: 800px;
+    paper: css`width: 100%;
+      max-width: 800px;
       min-height: 480px;
-      height: 80vh;
-      max-height: 640px;
+      height: ${smDown ? "100%" : "80vh"};
+      max-height: ${smDown ? "unset" : "640px"};
       padding: 8px 8px;
       z-index: 2;
+      border-radius: ${smDown ? "0" : "24px"}
+      
     `
   }
   return <main css={classes.main}>
