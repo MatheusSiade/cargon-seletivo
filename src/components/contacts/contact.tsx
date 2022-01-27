@@ -5,7 +5,6 @@ import ContactForm from "./form";
 import {css} from "@emotion/react";
 import {Delete, Edit} from "@mui/icons-material";
 import axios from "axios";
-import {token} from "../../constants";
 
 interface ContactProps {
   contact: ContactType;

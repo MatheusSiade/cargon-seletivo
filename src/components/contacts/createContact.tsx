@@ -4,7 +4,6 @@ import React, {useState} from "react";
 import {ContactType} from "./types";
 import {init_Contact} from "./helpers";
 import axios from "axios";
-import {token} from "../../constants";
 
 interface CreateContactProps {
   open: boolean,
