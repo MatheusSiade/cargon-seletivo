@@ -58,7 +58,7 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
     header: css`display: flex;
       justify-content: space-between;
       align-items: center;
-      min-width: 500px`,
+      min-width: 500px;`,
 
     email: css`display: flex;
       flex-direction: column;
@@ -76,7 +76,7 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
       margin-bottom: 16px;
       align-items: end;`
   }
-  return <div css={css`margin-top: 12px`}>
+  return <div css={css`margin-top: 12px; padding-right: 8px`}>
     <div css={classes.header}>
       <Typography variant={"h5"}>{contact.name}</Typography>
       <div>
@@ -84,7 +84,7 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
         <IconButton onClick={deleteC}><Delete/></IconButton>
       </div>
     </div>
-    <Divider/>
+    <Divider css={css`margin-bottom: 8px`}/>
     {edit ? <React.Fragment>
       <ContactForm contact={editContact} setContact={setEditContact}/>
       <div css={classes.header}>
