@@ -15,6 +15,8 @@ type User = FirebaseUser | null;
 const AuthContext = createContext<UserAuth | undefined>(undefined);
 
 export const AuthProvider: React.FC = ({children}) => {
+  //Cria um provider para acesso de dados do usuário logado no sistema. Armazena o usuário e o status de login.
+  //Utiliza o nookies para armazenar nos cookies o token do usuário.
   const [user, setUser] = useState<User>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isReady, setIsReady] = useState(false);
@@ -26,7 +28,7 @@ export const AuthProvider: React.FC = ({children}) => {
 
   useEffect(() => {
     setIsReady(false);
-    if (auth) {
+    if (auth) {//Adiciona um observer para mudanças no estado de login do usuário. Mantém as variáveis user e isLoggedIn atualizadas.
       const unsubscribe = onIdTokenChanged(auth, userAuth => {
         if (userAuth) {
           setUser(userAuth);
@@ -47,14 +49,13 @@ export const AuthProvider: React.FC = ({children}) => {
     }
   }, []);
 
-  // force refresh the token every 10 minutes
+  // Força renovação do token
   useEffect(() => {
     const handle = setInterval(async () => {
       const user = auth ? auth.currentUser : undefined;
       if (user) await user.getIdToken(true);
     }, 10 * 60 * 1000);
 
-    // clean up setInterval
     return () => clearInterval(handle);
   }, []);
 

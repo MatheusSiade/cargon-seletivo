@@ -13,11 +13,12 @@ export default function TopAppBar() {
   const userAuth = useAuthContext();
   const router = useRouter();
   const handleSignOut = async () => {
+    /*Solicita o fechamento da sessão ao firebase*/
     try {
       await signOut(auth);
       await router.push('/login');
     } catch (e) {
-      console.log("Logout falhou")
+      alert("Logout falhou")
     }
   };
   return (

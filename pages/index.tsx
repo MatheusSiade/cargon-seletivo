@@ -1,6 +1,6 @@
 import type {NextPage} from 'next'
 import Head from 'next/head'
-import ContactList from "../src/components/contacts/contactList";
+import Index from "../src/components/contacts";
 import {css} from "@emotion/react";
 import {useTheme} from "@mui/material";
 import MainLayout from "../src/components/mainLayout";
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
       </Head>
 
         <MainLayout>
-          <ContactList/>
+          <Index/>
         </MainLayout>
     </div>
   )

@@ -12,6 +12,7 @@ const ButtonWithLoading: React.FC<ButtonWithLoadingProps> = ({
                                                                outerCss,
                                                                ...props
                                                              }) => {
+  //Botão com indicador de carregamento.
   const classes = {
     outerDiv: css`
       position: relative;

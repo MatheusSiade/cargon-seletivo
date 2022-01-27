@@ -4,12 +4,8 @@ import {Visibility, VisibilityOff} from "@mui/icons-material";
 import ButtonWithLoading from "./buttonWithLoading";
 import {css} from "@emotion/react";
 import {useRouter} from "next/router";
-import nookies from 'nookies';
 import {auth} from "../providers/firebase-client";
-import Cookies from 'js-cookie';
 import {signInWithEmailAndPassword} from 'firebase/auth';
-import {getMessageFromSignInErrorCode} from "../helperText";
-
 
 const Login: React.FC = () => {
   interface userType {
@@ -49,6 +45,7 @@ const Login: React.FC = () => {
   };
 
   const handleLogin = async () => {
+    //Faz o login no firebase auth e redireciona para a página principal. Em caso de falha no login indica que email e senha podem estar errados
     if (!userForm.email || !userForm.password) setErrors({
       email: "Verifique seu email",
       password: "Verifique sua senha"
@@ -62,10 +59,6 @@ const Login: React.FC = () => {
           userForm.password,
         );
         let redirectToUrl = '/';
-        const redirectedFrom = Cookies.get('redirected_from');
-        nookies.set(undefined, 'redirected_from', '', {path: '/'});
-        if (redirectedFrom !== undefined && redirectedFrom !== '')
-          redirectToUrl = redirectedFrom;
         await router.push(redirectToUrl);
       } catch (e: any) {
         setLoadingButton(false);
@@ -73,7 +66,6 @@ const Login: React.FC = () => {
           email: "Verifique seu email",
           password: "Verifique sua senha"
         })
-        console.log(getMessageFromSignInErrorCode(e.code))
       }
     }
   };

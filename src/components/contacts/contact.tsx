@@ -32,6 +32,7 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
   }, [contact])
 
   const submitEdit = async () => {
+    //Faz a requisição de edição de um dado a API
     setLoading(true)
     if (editContact.name.length > 0 && editContact.email.length > 0 && contactErrors.name === "" && contactErrors.email === "") {
       try {
@@ -67,6 +68,7 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
     }
   }
   const deleteC = async () => {
+    //Requisita a deleção de um dado à API
     try {
       const response = await axios.delete(`https://gorest.co.in/public/v1/users/${contact.id}`, {
         headers: {

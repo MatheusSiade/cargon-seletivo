@@ -14,18 +14,22 @@ interface CreateContactProps {
 }
 
 const CreateContact: React.FC<CreateContactProps> = ({open, setOpen, addContact}) => {
+  //Abre um modal com o formulário de criação de contato
   const theme = useTheme();
-  const responsiveFullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [contactData, setContact] = useState<ContactType>(init_Contact);
-  const [loading, setLoading] = useState(false)
-  const [contactErrors, setContactErrors] = React.useState<ContactErrorsType>(init_ContactErrors);
+  const smDown = useMediaQuery(theme.breakpoints.down('sm')); //Determina se o viewport é menor que 600px (mobile)
+
+  const [contactData, setContact] = useState<ContactType>(init_Contact); //Dados do contato a ser criado
+  const [loading, setLoading] = useState(false) //Variável de controle do botão com indicador de espera
+  const [contactErrors, setContactErrors] = React.useState<ContactErrorsType>(init_ContactErrors);//Indicador de erros no formulário
 
   const clearForm = () => {
     setOpen(false)
     setLoading(false)
     setContact(init_Contact)
   }
-  const submitForm = async () => {
+
+  const submitForm = async () => {/*Requisição de envio dos dados fornecidos. Caso os campos erro ou email
+  estejam vazios determina mensagem de erro pra cada um deles.*/
     setLoading(true)
     if (contactData.name.length > 0 && contactData.email.length > 0 && contactErrors.name === "" && contactErrors.email === "") {
       try {
@@ -63,7 +67,7 @@ const CreateContact: React.FC<CreateContactProps> = ({open, setOpen, addContact}
   }
 
   return <Dialog
-    fullScreen={responsiveFullScreen}
+    fullScreen={smDown}
     open={open}
     onClose={() => setOpen(false)}
     aria-labelledby="create-contact"

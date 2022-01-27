@@ -3,6 +3,7 @@ import React from "react";
 import {Paper, useMediaQuery, useTheme} from "@mui/material";
 
 const MainLayout: React.FC = (props) => {
+  //Usado para responsividade, determina o background na página principal e o espaço a ser ocupado pelos componentes
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 

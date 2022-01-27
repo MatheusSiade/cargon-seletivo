@@ -15,6 +15,7 @@ interface ContactFormProps {
 const ContactForm: React.FC<ContactFormProps> = ({contact, setContact, errors, setErrors}) => {
 
   const setFieldsAndErrors = (key: string, value: string) => {
+    /*Altera os campos dentro do objeto a partir de uma chave e o valor a ser inserido. Também verifica erros de acordo com cada campo.*/
     if (key === "email") {
       const valid = validateEmail(value);
       !valid ? setErrors({
