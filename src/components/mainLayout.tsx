@@ -7,7 +7,9 @@ const MainLayout: React.FC = (props) => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const classes = {
-    main: css`margin-top: ${smDown ? "56px" : "64px"};
+    main: css`
+      min-height: 500px;
+      margin-top: ${smDown ? "56px" : "64px"};
       height: calc(100vh - ${smDown ? "56px" : "64px"});
       display: flex;
       align-items: center;
