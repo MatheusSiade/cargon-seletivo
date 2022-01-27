@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {ContactType} from "./types";
 import {
- Fab,
+  Fab,
   List,
   ListItem,
   ListItemButton,
@@ -25,6 +25,27 @@ const ContactList: React.FC = () => {
   const [open, setOpen] = useState(false)
   const [selectedContact, setSelectedContact] = useState<ContactType>()
 
+  const classes = {
+    mainDiv: css`display: flex;
+      width: 100%;
+      max-height: 100%;`,
+
+    list: css`height: inherit;
+      overflow-y: scroll;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }`,
+
+    helperText: css`display: flex;
+      justify-content: center;
+      align-items: center;
+      height: inherit;
+      width: 100%`,
+    fab: css`position: fixed;
+      bottom: 32px;
+      right: 56px`,
+  }
 
   const getContacts = async () => {
     setLoading(true)
@@ -40,26 +61,12 @@ const ContactList: React.FC = () => {
     getContacts()
   }, [])
 
-  const classes = {
-    mainDiv: css`display: flex;
-      width: 100%;
-      max-height: 100vh;
-      position: relative`,
-    list: css`height: calc(100vh - ${theme.mixins.toolbar.minHeight}px);
-      overflow-y: scroll;
 
-      &::-webkit-scrollbar {
-        display: none;
-      }`,
-    helperText: css`display: flex;
-      justify-content: center;
-      align-items: center;
-      height: calc(100vh - 64px);
-      width: 100%`,
-    fab: css`position: fixed;
-      bottom: 32px;
-      right: 56px`,
+  const addContact = (contact: ContactType) =>{
+    setContacts([contact, ...contacts]);
+    setSelectedContact(contact)
   }
+
   const deleteContact = (id: number) => {
     const index = contacts.findIndex(contact => contact.id === id)
     if (contacts.length > index && index !== -1) {
@@ -67,15 +74,18 @@ const ContactList: React.FC = () => {
       setSelectedContact(undefined)
     }
   }
+
   const updateContact = (contact: ContactType) => {
     const index = contacts.findIndex(c => c.id === contact.id)
     if (contacts.length > index && index !== -1) {
       setContacts([...contacts.slice(0, index), contact, ...contacts.slice(index + 1,)])
+      setSelectedContact(contact)
     }
   }
+
   return <div css={classes.mainDiv}>
     <div css={classes.list}>
-      <List>
+      <List css={css`height: 100%; padding-right: 8px `}>
         {contacts.map((contact) => {
           return <ListItem key={contact.id} selected={contact.id === selectedContact?.id} disablePadding>
             <ListItemButton onClick={() => setSelectedContact(contact)}>
@@ -92,7 +102,7 @@ const ContactList: React.FC = () => {
       <div css={classes.helperText}>
         <Typography>Selecione um contato para ver mais detalhes</Typography>
       </div>}
-    <CreateContact open={open} setOpen={setOpen}/>
+    <CreateContact open={open} setOpen={setOpen} addContact={addContact}/>
     <Fab color="primary" css={classes.fab} onClick={() => setOpen(true)}>
       <Add/>
     </Fab>

@@ -23,7 +23,12 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
   }, [contact])
 
   const submitEdit = async () => {
-    const response = await axios.put(`https://gorest.co.in/public/v1/users/${contact.id}`, editContact, {
+    const response = await axios.put(`https://gorest.co.in/public/v1/users/${contact.id}`, {
+      name: editContact.name,
+      email: editContact.email,
+      status: editContact.status,
+      gender: editContact.gender
+    }, {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
