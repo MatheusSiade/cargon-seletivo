@@ -32,7 +32,7 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
       }
     });
     if (response.status === 200) {
@@ -46,7 +46,7 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
       }
     });
     if (response.status === 204) {
@@ -98,11 +98,11 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
       </div>
       <div css={classes.optionsDiv}>
         <div css={classes.gender}>
-          <Typography>{contact.gender}</Typography>
+          <Typography>{contact.gender === "male"? "Masculino" : "Feminino"}</Typography>
           <Typography variant={"subtitle2"}> Gênero</Typography>
         </div>
         <div css={classes.status}>
-          <Typography>{contact.status}</Typography>
+          <Typography>{contact.status === "active" ? "Ativo" : "Inativo"}</Typography>
           <Typography variant={"subtitle2"}>Status</Typography>
         </div>
       </div>

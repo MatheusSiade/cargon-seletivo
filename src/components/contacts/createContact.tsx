@@ -27,7 +27,7 @@ const CreateContact: React.FC<CreateContactProps> = ({open, setOpen, addContact}
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
       }
     });
     if (response.status === 201) {
