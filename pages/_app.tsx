@@ -2,7 +2,7 @@ import '../styles/globals.css'
 import type {AppProps} from 'next/app'
 import {createTheme, ThemeProvider} from "@mui/material";
 import TopAppBar from "../src/components/appbar";
-import {css} from "@emotion/react";
+import {AuthProvider} from "../src/providers/authContext";
 
 const theme = createTheme({
   palette: {
@@ -44,8 +44,10 @@ const theme = createTheme({
 
 function MyApp({Component, pageProps}: AppProps) {
   return <ThemeProvider theme={theme}>
-    <TopAppBar/>
-    <Component {...pageProps}/>
+    <AuthProvider>
+      <TopAppBar/>
+      <Component {...pageProps}/>
+    </AuthProvider>
   </ThemeProvider>
 }
 

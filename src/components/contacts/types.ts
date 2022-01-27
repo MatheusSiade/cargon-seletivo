@@ -8,3 +8,7 @@ export interface ContactType {
   status: statusType;
   id?: number;
 }
+export interface ContactErrorsType {
+  name: string;
+  email: string;
+}

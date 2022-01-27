@@ -1,28 +1,53 @@
 import React from "react";
 import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField} from "@mui/material";
-import {ContactType, genderType, statusType} from "./types";
+import {ContactErrorsType, ContactType, genderType, statusType} from "./types";
 import {css} from "@emotion/react";
+import {validateEmail} from "./helpers";
 
 interface ContactFormProps {
   contact: ContactType;
-  setContact: React.Dispatch<React.SetStateAction<ContactType>>
+  setContact: React.Dispatch<React.SetStateAction<ContactType>>;
+  errors: ContactErrorsType;
+  setErrors: React.Dispatch<React.SetStateAction<ContactErrorsType>>;
+
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({contact, setContact}) => {
+const ContactForm: React.FC<ContactFormProps> = ({contact, setContact, errors, setErrors}) => {
 
   const setFieldsAndErrors = (key: string, value: string) => {
+    if (key === "email") {
+      const valid = validateEmail(value);
+      !valid ? setErrors({
+        ...errors,
+        [key]: "Digite um email válido"
+      }): setErrors({
+        ...errors,
+        [key]: ""
+      })
+    }else if(key ==="name"){
+      if(value.length === 0){
+        setErrors({
+          ...errors,
+          [key]: "Digite um nome válido"
+        })
+      } else setErrors({
+        ...errors,
+        [key]: ""
+      })
+    }
     setContact({
       ...contact,
       [key]: value
     })
+
   }
 
   return <div css={css`padding-top: 8px`}>
 
-    <TextField id="name" label="Nome" variant="outlined" value={contact.name}
+    <TextField id="name" label="Nome" variant="outlined" value={contact.name} helperText={errors.name} error={errors.name!==""}
                onChange={(e) => setFieldsAndErrors("name", e.target.value)} fullWidth/>
-    <TextField id="email" label="Email" variant="outlined" value={contact.email}
-               onChange={(e) => setFieldsAndErrors("email", e.target.value)}fullWidth/>
+    <TextField id="email" label="Email" variant="outlined" value={contact.email} helperText={errors.email} error={errors.email!==""}
+               onChange={(e) => setFieldsAndErrors("email", e.target.value)} fullWidth/>
     <div css={css`display: flex`}>
       <FormControl css={css`flex-grow: 1`}>
         <FormLabel id="gender">Gênero</FormLabel>

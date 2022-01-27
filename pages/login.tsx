@@ -1,18 +1,15 @@
 import type {NextPage} from 'next'
 import Head from 'next/head'
-import ContactList from "../src/components/contacts/contactList";
 import {css} from "@emotion/react";
 import {useTheme} from "@mui/material";
 import MainLayout from "../src/components/mainLayout";
-import {checkIfAuthenticated} from "../src/helpers";
-import { useAuthContext } from '../src/providers/authContext';
+import Login from "../src/components/login";
+import {checkIfNotAuthenticated} from "../src/helpers";
 
-export const getServerSideProps = checkIfAuthenticated;
+export const getServerSideProps = checkIfNotAuthenticated;
 
-const Home: NextPage = () => {
+const LoginPage: NextPage = () => {
   const theme = useTheme();
-  const userAuth = useAuthContext();
-
   return (
     <div css={css`margin-top: ${theme.mixins.toolbar.minHeight}px`}>
       <Head>
@@ -21,11 +18,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico"/>
       </Head>
 
-        <MainLayout>
-          <ContactList/>
-        </MainLayout>
+      <MainLayout>
+        <Login/>
+      </MainLayout>
     </div>
   )
 }
 
-export default Home
+export default LoginPage

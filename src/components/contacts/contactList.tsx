@@ -3,7 +3,7 @@ import axios from "axios";
 import {ContactType} from "./types";
 import {
   CircularProgress,
-  Fab, IconButton,
+  Fab,
   List,
   ListItem,
   ListItemButton,
@@ -12,7 +12,7 @@ import {
   Typography, useMediaQuery,
   useTheme
 } from "@mui/material";
-import {Add, Close, Person} from "@mui/icons-material";
+import {Add, Person} from "@mui/icons-material";
 import {css} from "@emotion/react";
 import Contact from "./contact";
 
@@ -70,7 +70,6 @@ const ContactList: React.FC = () => {
     if (hasNextPage) {
       setLoading(true)
       const response = await axios.get(`https://gorest.co.in/public/v1/users?page=${currentPage}`);
-      console.log(response)
       if (response.status === 200) {
         setLoading(false)
         setHasNextPage(response.data.meta.pagination.pages > currentPage)
@@ -140,7 +139,7 @@ const ContactList: React.FC = () => {
       <Contact contact={selectedContact}
                updateContact={updateContact}
                deleteContact={() => selectedContact?.id ? deleteContact(selectedContact?.id) : null}/>
-    </div> : !smDown && <div css={classes.helperText}>
+    </div> : !smDown && contacts.length!==0  && <div css={classes.helperText}>
         <Typography>Selecione um contato para ver mais detalhes</Typography>
     </div>}
 

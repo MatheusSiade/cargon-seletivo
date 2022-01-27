@@ -1,10 +1,12 @@
-import {ContactType} from "./types";
+import {ContactErrorsType, ContactType} from "./types";
 import {Button, Divider, IconButton, Typography, useMediaQuery, useTheme} from "@mui/material";
 import React, {useEffect} from "react";
 import ContactForm from "./form";
 import {css} from "@emotion/react";
 import {ArrowBack, Delete, Edit} from "@mui/icons-material";
 import axios from "axios";
+import ButtonWithLoading from "../buttonWithLoading";
+import {init_ContactErrors} from "./helpers";
 
 interface ContactProps {
   contact: ContactType;
@@ -20,40 +22,64 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
 
   const [edit, setEdit] = React.useState(true)
   const [editContact, setEditContact] = React.useState<ContactType>(contact);
+  const [loading, setLoading] = React.useState(false);
+
+  const [contactErrors, setContactErrors] = React.useState<ContactErrorsType>(init_ContactErrors);
+
   useEffect(() => {
     setEdit(false)
     setEditContact(contact)
   }, [contact])
 
   const submitEdit = async () => {
-    const response = await axios.put(`https://gorest.co.in/public/v1/users/${contact.id}`, {
-      name: editContact.name,
-      email: editContact.email,
-      status: editContact.status,
-      gender: editContact.gender
-    }, {
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
+    setLoading(true)
+    if (editContact.name.length > 0 && editContact.email.length > 0 && contactErrors.name === "" && contactErrors.email === "") {
+      try {
+        const response = await axios.put(`https://gorest.co.in/public/v1/users/${contact.id}`, {
+          name: editContact.name,
+          email: editContact.email,
+          status: editContact.status,
+          gender: editContact.gender
+        }, {
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
+          }
+        });
+        if (response.status === 200) {
+          updateContact(editContact)
+          setLoading(false);
+          setEdit(false);
+        }
+      } catch (e) {
+        alert("Houve um erro na requisição");
+        setLoading(false);
+        setEdit(false);
       }
-    });
-    if (response.status === 200) {
-      updateContact(editContact)
-      setEdit(false)
+    } else {
+      setLoading(false)
+      setContactErrors({
+        ...contactErrors,
+        name: editContact.name.length === 0 ? "Por favor preencha um nome" : contactErrors.name,
+        email: editContact.email.length === 0 ? "Por favor preencha um email" : contactErrors.email
+      })
     }
-
   }
   const deleteC = async () => {
-    const response = await axios.delete(`https://gorest.co.in/public/v1/users/${contact.id}`, {
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
+    try {
+      const response = await axios.delete(`https://gorest.co.in/public/v1/users/${contact.id}`, {
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`
+        }
+      });
+      if (response.status === 204) {
+        deleteContact()
       }
-    });
-    if (response.status === 204) {
-      deleteContact()
+    } catch (e) {
+      alert("Ocorreu um erro na deleção, verifique se o item já não foi deletado.")
     }
 
   }
@@ -94,10 +120,11 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
     </div>
     <Divider css={css`margin-bottom: 8px`}/>
     {edit ? <React.Fragment>
-      <ContactForm contact={editContact} setContact={setEditContact}/>
+      <ContactForm contact={editContact} setContact={setEditContact} errors={contactErrors}
+                   setErrors={setContactErrors}/>
       <div css={classes.header}>
         <Button onClick={() => setEdit(false)}>Cancelar</Button>
-        <Button onClick={submitEdit}>Enviar</Button>
+        <ButtonWithLoading loading={loading} onClick={submitEdit}>Enviar</ButtonWithLoading>
       </div>
     </React.Fragment> : <React.Fragment>
       <div css={classes.email}>
