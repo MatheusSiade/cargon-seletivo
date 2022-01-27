@@ -28,7 +28,9 @@ const MainLayout: React.FC = (props) => {
       transform: rotate(10deg) scale(1.1);
     `,
 
-    paper: css`width: 100%;
+    paper: css`
+      margin: ${smDown ? "0px" : "0 16px"};
+      width: 100%;
       max-width: 800px;
       min-height: 480px;
       height: ${smDown ? "100%" : "80vh"};
@@ -36,7 +38,7 @@ const MainLayout: React.FC = (props) => {
       padding: 8px 8px;
       z-index: 2;
       border-radius: ${smDown ? "0" : "24px"}
-      
+
     `
   }
   return <main css={classes.main}>

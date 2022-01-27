@@ -3,7 +3,7 @@ import {Button, Divider, IconButton, Typography, useMediaQuery, useTheme} from "
 import React, {useEffect} from "react";
 import ContactForm from "./form";
 import {css} from "@emotion/react";
-import {ArrowBack, Delete, Edit, KeyboardArrowLeft} from "@mui/icons-material";
+import {ArrowBack, Delete, Edit} from "@mui/icons-material";
 import axios from "axios";
 
 interface ContactProps {
@@ -77,10 +77,12 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
     status: css`display: flex;
       flex-direction: column;
       margin-bottom: 16px;
-      align-items: ${smDown ? "start" : "end"};`
+      align-items: ${smDown ? "start" : "end"};`,
+
+    subtitle: css`text-transform: uppercase`
   }
   return <div css={css`margin-top: 12px;
-    padding: ${smDown ? "0 8px" : "0 16px 0 0 "};
+    padding: ${smDown ? "0 32px" : "0 16px 0 0 "};
     width: ${smDown ? "100vw" : mdDown ? "400px" : "500px"};`}>
     <div css={classes.header}>
       {smDown && <IconButton onClick={() => updateContact(undefined)}><ArrowBack/></IconButton>}
@@ -100,16 +102,16 @@ const Contact: React.FC<ContactProps> = ({contact, deleteContact, updateContact}
     </React.Fragment> : <React.Fragment>
       <div css={classes.email}>
         <Typography>{contact.email}</Typography>
-        <Typography variant={"subtitle2"}> Email</Typography>
+        <Typography variant={"subtitle2"} css={classes.subtitle}> Email</Typography>
       </div>
       <div css={classes.optionsDiv}>
         <div css={classes.gender}>
           <Typography>{contact.gender === "male" ? "Masculino" : "Feminino"}</Typography>
-          <Typography variant={"subtitle2"}> Gênero</Typography>
+          <Typography variant={"subtitle2"} css={classes.subtitle}> Gênero</Typography>
         </div>
         <div css={classes.status}>
           <Typography>{contact.status === "active" ? "Ativo" : "Inativo"}</Typography>
-          <Typography variant={"subtitle2"}>Status</Typography>
+          <Typography variant={"subtitle2"} css={classes.subtitle}>Status</Typography>
         </div>
       </div>
     </React.Fragment>}
